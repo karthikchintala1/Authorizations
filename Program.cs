@@ -10,17 +10,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-//builder.Services.AddAuthorization(options =>
-//{
-//    options.AddPolicy("OnlyAdmins", policy => policy.AddRequirements());
-//});
-
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
-
+app.UseAuthentication();
+app.UseRouting();
+app.UseAuthorization();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -36,7 +35,13 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
+
+//app.MapAreaControllerRoute("home", "Home", "{controller}=Home/{action}=Index");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    //endpoints.MapAreaControllerRoute(name: "default", areaName: "Home", pattern: "{controller=Home}/{action=Index}");
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
