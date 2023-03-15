@@ -16,3 +16,18 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.special-link {
+    background-color: yellow;
+    border-radius: 30px;
+}
+.special-link-2 {
+    margin-left: 5px;
+    background-color: darkkhaki;
+    border-radius: 30px;
+}
+
+table, th, td {
+    border: 3px solid black;
+    border-color: #96D4D4;
+}

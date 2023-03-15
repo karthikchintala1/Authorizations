@@ -1,4 +1,8 @@
+using AuthorizationsTest.Authorization.ProductAccess;
+using AuthorizationsTest.Core;
+using AuthorizationsTest.Core.UserAccess;
 using AuthorizationsTest.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,14 +14,38 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-//builder.Services.AddAuthorization(options =>
-//{
-//    options.AddPolicy("OnlyAdmins", policy => policy.AddRequirements());
-//});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("PremiumOnly", policy => policy.AddRequirements(new ProductAccessRequirement(new string[]
+    {
+        Constants.ProductCodes.PremiumUser
+    })));
+    
+    options.AddPolicy("StandardOnly", policy => policy.AddRequirements(new ProductAccessRequirement(new string[]
+    {
+        Constants.ProductCodes.StandardUser
+    })));
+
+    options.AddPolicy("LimitedOnly", policy => policy.AddRequirements(new ProductAccessRequirement(new string[]
+    {
+        Constants.ProductCodes.LimitedUser
+    })));
+
+    options.AddPolicy("PremiumAndStandard", policy => policy.AddRequirements(new ProductAccessRequirement(new string[]
+    {
+        Constants.ProductCodes.StandardUser,
+        Constants.ProductCodes.PremiumUser
+    })));
+});
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddRazorPages();
+
+// DI
+builder.Services.AddSingleton<IUserAccessRepository, UserAccessRepository>();
+builder.Services.AddSingleton<IAuthorizationHandler, ProductAccessHandler>();
 
 var app = builder.Build();
 
