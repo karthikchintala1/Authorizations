@@ -45,6 +45,8 @@ builder.Services.AddRazorPages();
 
 // DI
 builder.Services.AddSingleton<IUserAccessRepository, UserAccessRepository>();
+
+builder.Services.AddSingleton<IAuthorizationHandler, TemporaryProductAccessHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, ProductAccessHandler>();
 
 var app = builder.Build();
