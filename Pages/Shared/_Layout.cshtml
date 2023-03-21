@@ -1,4 +1,6 @@
-﻿@inject SignInManager<IdentityUser> SignInManager
+﻿@using Microsoft.AspNetCore.Authorization
+@inject SignInManager<IdentityUser> SignInManager
+@inject IAuthorizationService AuthorizationService
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,12 +31,21 @@
                         </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark special-link" asp-area="" asp-page="/PremiumLounge" style="background: yellow;">Premium Lounge</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark special-link-2" asp-area="" asp-page="/StandardLounge" >Standard Lounge</a>
-                            </li>
+                            var isPremium = await AuthorizationService.AuthorizeAsync(User, "PremiumOnly");
+                            var isStandard = await AuthorizationService.AuthorizeAsync(User, "StandardOnly");
+                            if (@isPremium.Succeeded)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark special-link" asp-area="" asp-page="/PremiumLounge" style="background: yellow;">Premium Lounge</a>
+                                </li>
+                            }
+
+                            if (@isStandard.Succeeded)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark special-link-2" asp-area="" asp-page="/StandardLounge">Standard Lounge</a>
+                                </li>
+                            }
                         }
                     </ul>
                     <partial name="_LoginPartial" />

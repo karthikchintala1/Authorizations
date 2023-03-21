@@ -9,25 +9,6 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<h2>
-    Users and their product access ID's:
-</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Product Access Id's</th>
-
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>karthik@gmail.com</td>
-            <td>Standard User</td>
-        </tr>
-        <tr>
-            <td>john@gmail.com</td>
-            <td>Standard User, Premium User</td>
-        </tr>
-    </tbody>
-</table>
+<h2>Current User access permissions:</h2>
+<h3>Has Premium Access: @ViewData["hasPremiumAccess"]</h3>
+<h3>Has Standard Access: @ViewData["hasStandardAccess"]</h3>

@@ -15,7 +15,11 @@ namespace AuthorizationsTest.Authorization.ProductAccess
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ProductAccessRequirement requirement)
         {
             var user = ClaimExtensions.GetClaim(context.User, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", "nameidentifier");
-            if (user == null) context.Fail();
+            if (user == null)
+            {
+                context.Fail();
+                return Task.CompletedTask;
+            }
 
             var hasAccess = _userAccessRepository.HasAccess(user.Value, requirement.ProductIds, CancellationToken.None);
             if (hasAccess) context.Succeed(requirement);
